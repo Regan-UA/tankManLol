@@ -9,9 +9,10 @@ public class playerController : Tank
     private void Update()
     {
         Vector2 dir = move.action.ReadValue<Vector2>();
+
         Vector3 localMove = (transform.right * dir.x) + (transform.forward * dir.y);
 
-        Ride(localMove);
+        Ride(new Vector3(dir.x, 0, dir.y));
 
         RotateTurret(AimTurret());
 
