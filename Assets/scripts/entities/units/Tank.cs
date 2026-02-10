@@ -10,8 +10,12 @@ public class Tank : Mover
     }
     public void Ride(Vector3 direction)
     {
-            MoveObjectRb(transform.forward * direction.magnitude, tankStats.MovementSpeed, tankStats.MovementSmoothing);
-            RotateObject(transform, direction, tankStats.HullRotationSpeed, tankStats.HullRotationSmoothing);
+        // direction від гравця зазвичай приходить як (x, 0, z)
+        // Ми передаємо його як локальний напрямок
+        MoveObjectRb(direction.normalized, tankStats.MovementSpeed, tankStats.MovementSmoothing);
+
+        // Для повороту використовуємо той самий напрямок
+        RotateObject(transform, direction, tankStats.HullRotationSpeed, tankStats.HullRotationSmoothing);
     }
     public void RotateTurret(Vector3 target)
     {

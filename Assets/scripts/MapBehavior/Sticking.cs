@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Sticking : MonoBehaviour
 {
@@ -14,13 +14,8 @@ public class Sticking : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
-    void Update()
-    {
 
-    }
     private void FixedUpdate()
     {
         //raycast for collider search

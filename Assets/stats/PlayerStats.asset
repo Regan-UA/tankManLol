@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TankStats
   MaxHealth: 0
   HealthRegeneration: 0
+  MovementSpeed: 5
   MovementSmoothing: 8
   HullRotationSpeed: 300
-  HullRotationSmoothing: 0.01
-  TurretRotationSpeed: 300
-  TurretRotationSmoothing: 0.01
+  HullRotationSmoothing: 0.02

@@ -8,18 +8,21 @@ public class playerController : Tank
     public InputActionReference attack;
     private void Update()
     {
-        Vector2 dir = move.action.ReadValue<Vector2>();
+        Vector2 input = move.action.ReadValue<Vector2>();
 
-        Vector3 localMove = (transform.right * dir.x) + (transform.forward * dir.y);
+        // 1. Отримуємо базові світові вектори руху (наприклад, відносно камери або просто світу)
+        // Якщо у тебе є камера, краще замінити Vector3.forward на camera.transform.forward
+        Vector3 forward = Vector3.forward;
+        Vector3 right = Vector3.right;
 
-        Ride(new Vector3(dir.x, 0, dir.y));
+        // 2. Формуємо світовий вектор бажаного напрямку
+        Vector3 desiredMoveDirection = (forward * input.y + right * input.x).normalized;
+
+        // 3. Передаємо цей вектор у Ride
+        // Навіть якщо desiredMoveDirection дивиться "в землю", Ride його виправить
+        Ride(desiredMoveDirection);
 
         RotateTurret(AimTurret());
-
-        //if ()
-        //{
-        //    Shoot();
-        //}
     }
     private Vector3 AimTurret()
     {

@@ -14,45 +14,61 @@ public class Mover : MonoBehaviour
     {
         transform.position += direction * speed * Time.deltaTime;
     }
-    public void MoveObjectRb(Vector3 direction, float speed, float acceleration)
+    public void MoveObjectRb(Vector3 worldDirection, float speed, float acceleration)
     {
-        // 1. Переводимо поточну світову швидкість у локальну (відносно гравця)
-        // Тепер Vector3.up — це завжди "голова" гравця, а не небо
-        Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
+        if (worldDirection.magnitude < 0.01f)
+        {
+            // Плавна зупинка, якщо вводу немає, зберігаючи лише вертикальну швидкість (гравітацію)
+            Vector3 verticalVel = Vector3.Project(rb.linearVelocity, transform.up);
+            rb.linearVelocity = Vector3.MoveTowards(rb.linearVelocity, verticalVel, acceleration * Time.fixedDeltaTime);
+            return;
+        }
 
-        // 2. Обчислюємо цільову швидкість (direction має бути локальним, наприклад, Vector2 від Input)
-        Vector3 targetLocalHorizontalVelocity = direction * speed;
+        // 1. ПРОЕКЦІЯ: Робимо ввід паралельним поверхні, на якій стоїть танк
+        // transform.up — це нормаль, яку ти отримуєш у скрипті Sticking
+        Vector3 moveDirOnPlane = Vector3.ProjectOnPlane(worldDirection, transform.up).normalized;
 
-        // 3. Плавно змінюємо локальні X та Z (це площина, по якій ми ходимо)
-        Vector3 currentLocalHorizontal = new Vector3(localVelocity.x, 0, localVelocity.z);
+        // 2. Розраховуємо цільову швидкість
+        Vector3 targetVelocity = moveDirOnPlane * speed;
 
-        Vector3 newLocalHorizontal = Vector3.MoveTowards(
-            currentLocalHorizontal,
-            targetLocalHorizontalVelocity,
-            acceleration * Time.fixedDeltaTime
-        );
+        // 3. Отримуємо поточну швидкість і відокремлюємо "притискання"
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 verticalComponent = Vector3.Project(currentVelocity, transform.up);
+        Vector3 horizontalComponent = currentVelocity - verticalComponent;
 
-        // 4. Збираємо локальний вектор назад:
-        // Нові X та Z + старий локальний Y (сила, що притискає до стіни або стрибок)
-        Vector3 newLocalVelocity = new Vector3(newLocalHorizontal.x, localVelocity.y, newLocalHorizontal.z);
+        // 4. Змінюємо тільки рух вздовж поверхні
+        Vector3 newHorizontal = Vector3.MoveTowards(horizontalComponent, targetVelocity, acceleration * Time.fixedDeltaTime);
 
-        // 5. Переводимо результат назад у світові координати для Rigidbody
-        rb.linearVelocity = transform.TransformDirection(newLocalVelocity);
+        // 5. Фінальний вектор: рух по поверхні + існуюча сила притягання
+        rb.linearVelocity = newHorizontal + verticalComponent;
     }
-    public void RotateObject(Transform obj, Vector3 targetDir, float speed, float smoothAmount)
+    public void RotateObject(Transform obj, Vector3 worldDir, float speed, float smoothAmount)
     {
-        if (targetDir == Vector3.zero) return;
+        if (worldDir.sqrMagnitude < 0.01f) return;
 
-        targetDir.y = 0;
-        Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-        obj.rotation = Quaternion.Slerp(obj.rotation, targetRotation, speed * Time.deltaTime * smoothAmount);
+        // Проектуємо напрямок погляду на поверхню
+        Vector3 projectedDir = Vector3.ProjectOnPlane(worldDir, obj.up);
+
+        if (projectedDir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(projectedDir, obj.up);
+            obj.rotation = Quaternion.Slerp(obj.rotation, targetRotation, speed * Time.deltaTime * smoothAmount);
+        }
     }
-    public void RotateObject(Transform obj, Vector3 targetDir, float speed)
+    public void RotateObject(Transform obj, Vector3 localDir, float speed)
     {
-        if (targetDir == Vector3.zero) return;
+        if (localDir.sqrMagnitude < 0.01f) return;
 
-        targetDir.y = 0;
-        Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-        obj.rotation = Quaternion.RotateTowards(obj.rotation, targetRotation, speed * Time.deltaTime);
+        // Створюємо вектор напрямку в світових координатах на основі локального вводу
+        Vector3 worldDir = obj.TransformDirection(localDir);
+
+        // Проектуємо цей напрямок на площину поверхні (використовуючи поточний UP танка)
+        Vector3 projectedDir = Vector3.ProjectOnPlane(worldDir, obj.up);
+
+        if (projectedDir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(projectedDir, obj.up);
+            obj.rotation = Quaternion.RotateTowards(obj.rotation, targetRotation, speed * Time.deltaTime);
+        }
     }
 }
