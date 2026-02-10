@@ -6,13 +6,13 @@ public class playerController : Tank
 {
     public InputActionReference move;
     public InputActionReference attack;
+    public Vector3 movementOffset = Vector3.zero;
     private void Update()
     {
         Vector2 dir = move.action.ReadValue<Vector2>();
 
-        //Vector3 localMove = (transform.right * dir.x) + (transform.forward * dir.y);
-
-        Ride(new Vector3(dir.x, 0, dir.y));
+        // Тепер передаємо цей світовий вектор у метод
+        Ride(new Vector3(dir.x * (movementOffset.x+ 1), movementOffset.y, dir.y * (movementOffset.z + 1)));
 
         RotateTurret(AimTurret());
 
@@ -53,4 +53,5 @@ public class playerController : Tank
         move.action.Disable();
         attack.action.performed -= OnSpace;
     }
+    //BRUH
 }
