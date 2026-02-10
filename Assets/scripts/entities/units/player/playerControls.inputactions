@@ -3,13 +3,22 @@
     "name": "playerControls",
     "maps": [
         {
-            "name": "Gameplay",
+            "name": "PlayerControls",
             "id": "5d0f2b05-b17c-42dc-8279-4e3f5355b309",
             "actions": [
                 {
                     "name": "Move",
                     "type": "Button",
                     "id": "e1c38229-b4a7-47b0-98a4-7d46e72da002",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "e8d0e391-1303-4955-aba9-93673ada6644",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -71,6 +80,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "dafdaaa3-4432-4cc8-969d-e858e027ca8f",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
