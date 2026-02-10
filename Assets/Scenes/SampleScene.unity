@@ -151,13 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3333388cd868e194dbdb7f07821613fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerController
+  stats: {fileID: 11400000, guid: 6b12604806220a549bc4033c963c14f7, type: 2}
   Turret: {fileID: 1884443552}
-  MovementSpeed: 7
-  HullRotationSpeed: 500
-  TurretRotationSpeed: 800
-  hullMovementSmoothing: 5
-  hullRotationSmoothing: 0.01
-  turretRotationSmoothing: 0.02
   move: {fileID: 1197397269}
 --- !u!4 &155703211
 Transform:
@@ -168,7 +163,7 @@ Transform:
   m_GameObject: {fileID: 155703206}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3564, y: 0.194, z: 1.83912}
+  m_LocalPosition: {x: 1.4374312, y: 0.08, z: 1.8406477}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -198,7 +193,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
@@ -360,8 +355,8 @@ Transform:
   m_GameObject: {fileID: 325061916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.44, y: -0.09, z: -2.73}
-  m_LocalScale: {x: 1.7006274, y: 0.76100945, z: 4.229113}
+  m_LocalPosition: {x: 5.28, y: -0.23, z: -1.91}
+  m_LocalScale: {x: 3.7709715, y: 0.76100945, z: 4.229113}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

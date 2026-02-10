@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 public class Mover : MonoBehaviour
 {
-    private Rigidbody rb;
-    private void Awake()
+    protected Rigidbody rb;
+    public UnitStats stats;
+    protected virtual void Awake() // Стандартний метод Unity
     {
         rb = GetComponent<Rigidbody>();
     }
