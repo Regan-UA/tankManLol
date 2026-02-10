@@ -16,28 +16,21 @@ public class Mover : MonoBehaviour
     }
     public void MoveObjectRb(Vector3 direction, float speed, float acceleration)
     {
-        // 1. Переводимо поточну світову швидкість у локальну (відносно гравця)
-        // Тепер Vector3.up — це завжди "голова" гравця, а не небо
-        Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
+        // 1. Визначаємо цільову швидкість у світових координатах
+        Vector3 targetVelocity = direction * speed;
 
-        // 2. Обчислюємо цільову швидкість (direction має бути локальним, наприклад, Vector2 від Input)
-        Vector3 targetLocalHorizontalVelocity = direction * speed;
+        // 2. Беремо поточну швидкість, але обнуляємо Y, щоб не впливати на гравітацію/стрибок
+        Vector3 currentHorizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 
-        // 3. Плавно змінюємо локальні X та Z (це площина, по якій ми ходимо)
-        Vector3 currentLocalHorizontal = new Vector3(localVelocity.x, 0, localVelocity.z);
-
-        Vector3 newLocalHorizontal = Vector3.MoveTowards(
-            currentLocalHorizontal,
-            targetLocalHorizontalVelocity,
+        // 3. Плавно наближаємо поточну швидкість до цільової
+        Vector3 newHorizontalVelocity = Vector3.MoveTowards(
+            currentHorizontalVelocity,
+            targetVelocity,
             acceleration * Time.fixedDeltaTime
         );
 
-        // 4. Збираємо локальний вектор назад:
-        // Нові X та Z + старий локальний Y (сила, що притискає до стіни або стрибок)
-        Vector3 newLocalVelocity = new Vector3(newLocalHorizontal.x, localVelocity.y, newLocalHorizontal.z);
-
-        // 5. Переводимо результат назад у світові координати для Rigidbody
-        rb.linearVelocity = transform.TransformDirection(newLocalVelocity);
+        // 4. Призначаємо нову швидкість, зберігаючи поточну вертикальну швидкість (Y)
+        rb.linearVelocity = new Vector3(newHorizontalVelocity.x, rb.linearVelocity.y, newHorizontalVelocity.z);
     }
     public void RotateObject(Transform obj, Vector3 targetDir, float speed, float smoothAmount)
     {
