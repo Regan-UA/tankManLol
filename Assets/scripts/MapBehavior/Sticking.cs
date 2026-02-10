@@ -15,7 +15,6 @@ public class Sticking : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
     void Update()
     {
@@ -27,7 +26,7 @@ public class Sticking : MonoBehaviour
         ColliderFinderRayCast();
 
         //gravity
-        rb.AddForce(gravityVector * gravityForce * 10 * rb.mass, ForceMode.Force);
+        rb.AddForce(gravityVector * gravityForce * 5 * rb.mass, ForceMode.Force);
     }
     private void ColliderFinderRayCast()
     {
@@ -43,7 +42,7 @@ public class Sticking : MonoBehaviour
         {
             RaycastHit tempHit;
 
-            if (Physics.Raycast(transform.position, dir, out tempHit, rayDistance, groundLayer))
+            if (Physics.SphereCast(transform.position + (transform.up * 0.5f), 0.5f, dir, out tempHit, rayDistance, groundLayer))
             {
                 //calling for new gravity vector when found a surface
                 SetGravity(tempHit);
@@ -68,15 +67,13 @@ public class Sticking : MonoBehaviour
     }
     private void AlightSurface(Vector3 normal)
     {
+        //making forward parralel to the surface
         Vector3 newForfard = Vector3.ProjectOnPlane(transform.forward, normal);
 
-        if (newForfard.sqrMagnitude < 0.001f)
-        {
-            newForfard = transform.forward;
-        }
-
+        //rotating the object to the surface
         Quaternion targetRotation = Quaternion.LookRotation(newForfard, normal);
 
+        //applying rotation
         rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f));
     }
 }

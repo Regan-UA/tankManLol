@@ -10,7 +10,7 @@ public class playerController : Tank
     {
         Vector2 dir = move.action.ReadValue<Vector2>();
 
-        Vector3 localMove = (transform.right * dir.x) + (transform.forward * dir.y);
+        //Vector3 localMove = (transform.right * dir.x) + (transform.forward * dir.y);
 
         Ride(new Vector3(dir.x, 0, dir.y));
 
