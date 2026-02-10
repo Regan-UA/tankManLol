@@ -56,10 +56,17 @@ public class Sticking : MonoBehaviour
     }
     private void SetGravity(RaycastHit hit)
     {
-        if (gravityVector == -hit.normal) return; //if the same surface is already set as gravity, do nothing
+        Vector3 rounded = new Vector3(Mathf.Round(hit.normal.x), Mathf.Round(hit.normal.y), Mathf.Round(hit.normal.z)); //rounding the normal vector to avoid small changes in gravity vector
 
-        gravityVector = -hit.normal; //gravity vector
-        AlightSurface(hit.normal); //attemp at changing player's alignment to surface
+        if (rounded == Vector3.zero)
+        {
+            rounded = hit.normal;
+        }
+
+        if (gravityVector == -rounded) return; //if the same surface is already set as gravity, do nothing
+
+        gravityVector = -rounded; //gravity vector
+        AlightSurface(rounded); //attemp at changing player's alignment to surface
 
         if (debugMode)
         {
