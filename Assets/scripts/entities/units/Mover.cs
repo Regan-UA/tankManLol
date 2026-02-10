@@ -2,14 +2,17 @@
 public class Mover : MonoBehaviour
 {
     protected Rigidbody rb;
-    public UnitStats stats;
     protected virtual void Awake() // Стандартний метод Unity
     {
-        rb = GetComponent<Rigidbody>();
+        TryGetComponent(out rb);
+    }
+    public void MoveObjectRb(Vector3 direction, float speed)
+    {
+        rb.linearVelocity = speed * direction;
     }
     public void MoveObject(Vector3 direction, float speed)
     {
-        rb.linearVelocity = speed * direction;
+        transform.position += direction * speed * Time.deltaTime;
     }
     public void RotateObject(Transform obj, Vector3 targetDir, float speed)
     {
@@ -19,7 +22,7 @@ public class Mover : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(targetDir);
         obj.rotation = Quaternion.RotateTowards(obj.rotation, targetRotation, speed * Time.deltaTime);
     }
-    public void MoveObject(Vector3 direction, float speed, float acceleration)
+    public void MoveObjectRb(Vector3 direction, float speed, float acceleration)
     {
         // 1. Обчислюємо цільову швидкість тільки для горизонтальних осей (X, Z)
         Vector3 targetHorizontalVelocity = direction * speed;
