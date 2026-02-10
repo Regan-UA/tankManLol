@@ -13,6 +13,7 @@ public class Sticking : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
     }
     void Update()
     {
@@ -44,11 +45,16 @@ public class Sticking : MonoBehaviour
     }
     private void StickingSys()
     {
-        Collider groundLevel = Physics.OverlapSphere(transform.position, scanRadius, groundLayer)[0];
+        Collider[] hits = Physics.OverlapSphere(transform.position, scanRadius, groundLayer);
 
-        if (groundLevel != null)
+        if (hits.Length > 0)
         {
-            gravityVector = (groundLevel.ClosestPoint(transform.position) - (Vector3)transform.position).normalized;
+            Collider groundLevel = hits[0];
+            if (groundLevel != null)
+            {
+                gravityVector = (groundLevel.ClosestPoint(transform.position) - (Vector3)transform.position).normalized;
+            }
         }
+        
     }
 }
