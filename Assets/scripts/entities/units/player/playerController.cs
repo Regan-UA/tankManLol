@@ -11,11 +11,8 @@ public class playerController : Tank
     {
         Vector2 dir = move.action.ReadValue<Vector2>();
 
-        // Конвертуємо локальний напрямок (відносно гравця) у світовий
-        Vector3 worldDirection = transform.TransformDirection(new Vector3(dir.x * movementOffset.x, movementOffset.y, dir.y * movementOffset.z));
-
         // Тепер передаємо цей світовий вектор у метод
-        Ride(worldDirection);
+        Ride(new Vector3(dir.x * (movementOffset.x+ 1), movementOffset.y, dir.y * (movementOffset.z + 1)));
 
         RotateTurret(AimTurret());
 
