@@ -3,7 +3,6 @@ using UnityEngine;
 public class Sticking : MonoBehaviour
 {
     public LayerMask groundLayer;
-    public float scanRadius;
     public float rayDistance;
 
     private Rigidbody rb;
@@ -24,18 +23,20 @@ public class Sticking : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        //raycast for collider search
         ColliderFinderRayCast();
 
-        rb.AddForce(gravityVector * gravityForce * rb.mass, ForceMode.Force);
+        //gravity
+        rb.AddForce(gravityVector * gravityForce * 10 * rb.mass, ForceMode.Force);
     }
     private void ColliderFinderRayCast()
     {
         Vector3[] directions = {
+        -transform.up,
+        -transform.forward,
         transform.right,
         -transform.right,
-        transform.forward,
-        -transform.forward,
-        -transform.up
+        transform.forward
         };
 
         foreach (Vector3 dir in directions)
@@ -44,18 +45,24 @@ public class Sticking : MonoBehaviour
 
             if (Physics.Raycast(transform.position, dir, out tempHit, rayDistance, groundLayer))
             {
+                //calling for new gravity vector when found a surface
                 SetGravity(tempHit);
+
+                if (debugMode)
+                {
+                    Debug.DrawRay(transform.position, dir * rayDistance, Color.red);
+                    Debug.Log("gravityVector: " + gravityVector);
+                }
             }
         }
     }
     private void SetGravity(RaycastHit hit)
     {
-        gravityVector = -hit.normal;
-        AlightSurface(hit.normal);
+        gravityVector = -hit.normal; //gravity vector
+        AlightSurface(hit.normal); //attemp at changing player's alignment to surface
 
         if (debugMode)
         {
-            Debug.DrawRay(transform.position, -transform.up * rayDistance, Color.red);
             Debug.Log("gravityVector: " + gravityVector);
         }
     }
