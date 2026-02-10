@@ -8,6 +8,7 @@ public class playerController : Tank
     private void Update()
     {
         Vector2 dir = move.action.ReadValue<Vector2>();
+
         Ride(new Vector3(dir.x, 0, dir.y));
 
         AimTurret();
