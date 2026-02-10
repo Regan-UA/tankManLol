@@ -8,7 +8,7 @@ public class Sticking : MonoBehaviour
     private Rigidbody rb;
 
     private float gravityForce = 9.81f;
-    private Vector3 gravityVector;
+    public Vector3 gravityVector;
 
     public bool debugMode;
     void Start()
@@ -50,13 +50,14 @@ public class Sticking : MonoBehaviour
                 if (debugMode)
                 {
                     Debug.DrawRay(transform.position, dir * rayDistance, Color.red);
-                    Debug.Log("gravityVector: " + gravityVector);
                 }
             }
         }
     }
     private void SetGravity(RaycastHit hit)
     {
+        if (gravityVector == -hit.normal) return; //if the same surface is already set as gravity, do nothing
+
         gravityVector = -hit.normal; //gravity vector
         AlightSurface(hit.normal); //attemp at changing player's alignment to surface
 
